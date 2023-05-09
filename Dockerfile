@@ -1,24 +1,23 @@
-FROM node:18.16.0-alpine
+FROM node:10-alpine
 
-# Create app directory
+# update packages
+RUN apk update
+
+# create root application folder
 WORKDIR /app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# copy configs to /app folder
 COPY package*.json ./
+COPY tsconfig.json ./
+# copy source code to /app/src folder
+COPY src /app/src
 
-RUN NODE_ENV=development npm install
-# If you are building your code for production
-# RUN npm install --only=production
+# check files list
+RUN ls -a
 
-# Bundle app source
-COPY . .
-
-# for typescript
-# RUN npm run build
-# COPY .env ./dist/
-# WORKDIR ./dist
+RUN npm install
+RUN npm run build --production
 
 EXPOSE 5000
-CMD tsc && node ./dist/index.js
+
+CMD [ "node", "./dist/index.js" ]

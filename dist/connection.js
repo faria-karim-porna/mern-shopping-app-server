@@ -27,7 +27,10 @@ const connection = () => __awaiter(void 0, void 0, void 0, function* () {
     };
     // mongoose.set("useFindAndModify", false);
     try {
-        yield mongoose_1.default.connect(uri);
+        yield mongoose_1.default.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log("Database connected successfully");
     }
     catch (error) {
