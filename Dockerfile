@@ -1,7 +1,7 @@
-FROM node:10-alpine
+FROM node:18.16.0-alpine
 
 # update packages
-RUN apk update
+# RUN apk update
 
 # create root application folder
 WORKDIR /app
@@ -16,7 +16,8 @@ COPY src /app/src
 RUN ls -a
 
 RUN npm install
-RUN npm run build --production
+# RUN npm run build --production
+RUN npm run build
 
 EXPOSE 5000
 
