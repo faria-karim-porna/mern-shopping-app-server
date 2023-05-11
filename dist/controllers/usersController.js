@@ -8,16 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createAccount = void 0;
 const usersModel_1 = require("../models/usersModel");
-const bcrypt = require("bcryptjs");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt = require("jsonwebtoken");
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
         const plainTextPassword = body.password;
-        const encryptedPassword = bcrypt.hashSync(plainTextPassword, 10);
+        const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
         if (!body.name || typeof body.name !== "string") {
             res.status(403).json({ status: "error", error: "Invalid username" });
         }

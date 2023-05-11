@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { IUsers } from "../types/userType";
 import { Users } from "../models/usersModel";
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 const jwt = require("jsonwebtoken");
 
 const createAccount = async (req: Request, res: Response): Promise<void> => {
@@ -9,7 +9,6 @@ const createAccount = async (req: Request, res: Response): Promise<void> => {
     const body = req.body as Pick<IUsers, keyof IUsers>;
     const plainTextPassword = body.password;
     const encryptedPassword = bcrypt.hashSync(plainTextPassword, 10);
-
     if (!body.name || typeof body.name !== "string") {
       res.status(403).json({ status: "error", error: "Invalid username" });
     }
