@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
-// import router from "./routes";
+const routes_1 = __importDefault(require("./routes"));
 const connection_1 = __importDefault(require("./connection"));
 // import MongoClient from "mongodb".MongoClient;
 dotenv_1.default.config();
@@ -15,7 +15,7 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use((0, cors_1.default)());
-// app.use(router);
+app.use(routes_1.default);
 const port = 5000;
 app.get("/", (req, res) => {
     res.send("Hello World!");
