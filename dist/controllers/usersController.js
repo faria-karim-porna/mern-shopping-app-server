@@ -46,32 +46,5 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         throw error;
     }
-    // if (!name || typeof name !== "string") {
-    //   return res.json({ status: "error", error: "Invalid username" });
-    // }
-    // if (!plainTextPassword || typeof plainTextPassword !== "string") {
-    //   return res.json({ status: "error", error: "Invalid password" });
-    // }
-    // if (plainTextPassword.length < 5) {
-    //   return res.json({
-    //     status: "error",
-    //     error: "Password too small. Should be atleast 6 characters",
-    //   });
-    // }
-    // const password = bcrypt.hashSync(plainTextPassword, 10);
-    // usersCollection
-    //   .insertOne({
-    //     name,
-    //     email,
-    //     password,
-    //     phone,
-    //     terms,
-    //     offers,
-    //   })
-    //   .then((result: any) => {
-    //     if (result) {
-    //       res.json({ status: "Account Created Successfully" });
-    //     }
-    //   });
 });
 exports.createAccount = createAccount;
