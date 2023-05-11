@@ -1,18 +1,14 @@
 import { Router } from "express";
-import { addMultipleMovies, getMoviesInfo, updateSeatStatus } from "../controllers/moviesController";
 import { createAccount } from "../controllers/usersController";
+import { addItems, deleteItems, getItems, updateItems } from "../controllers/itemsController";
 
 const router: Router = Router();
 
-// router.post("/addAllData", addMultipleMovies);
-
-// router.get("/showMoviesInfo", getMoviesInfo);
-
-// router.patch("/updateStatus", updateSeatStatus);
-
 router.post("/api/createAccount", createAccount);
 
-// router.get("/getBookings", getBookingsData);
-
+router.post("/api/addItems", addItems);
+router.post("/api/getItems", getItems);
+router.post("/api/updateItems", updateItems);
+router.post("/api/deleteItems", deleteItems);
 
 export default router;

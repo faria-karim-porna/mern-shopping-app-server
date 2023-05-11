@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const usersController_1 = require("../controllers/usersController");
+const itemsController_1 = require("../controllers/itemsController");
 const router = (0, express_1.Router)();
-// router.post("/addAllData", addMultipleMovies);
-// router.get("/showMoviesInfo", getMoviesInfo);
-// router.patch("/updateStatus", updateSeatStatus);
 router.post("/api/createAccount", usersController_1.createAccount);
-// router.get("/getBookings", getBookingsData);
+router.post("/api/addItems", itemsController_1.addItems);
+router.post("/api/getItems", itemsController_1.getItems);
+router.post("/api/updateItems", itemsController_1.updateItems);
+router.post("/api/deleteItems", itemsController_1.deleteItems);
 exports.default = router;

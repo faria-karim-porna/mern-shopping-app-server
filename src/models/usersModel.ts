@@ -1,7 +1,6 @@
-import { IUsers } from "../types/userType";
+import { IUsers } from "../types/usersType";
 import { model, Schema } from "mongoose";
 // const ObjectId = require("mongodb").ObjectId;
-
 const usersSchema: Schema = new Schema({
   // _id: { type: typeof ObjectId, required: true },
   id: { type: String, required: true },

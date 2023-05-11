@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { IUsers } from "../types/userType";
+import { IUsers } from "../types/usersType";
 import { Users } from "../models/usersModel";
 import bcrypt from "bcryptjs";
 const jwt = require("jsonwebtoken");
