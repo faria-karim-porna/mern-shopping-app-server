@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAccount = void 0;
+exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.createAccount = void 0;
 const usersModel_1 = require("../models/usersModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt = require("jsonwebtoken");
@@ -51,3 +51,72 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createAccount = createAccount;
+const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const body = req.body;
+        const user = new usersModel_1.Users({
+            id: body.id,
+            name: "",
+            email: body.email,
+            password: "",
+            createdAt: body.createdAt,
+            createdBy: body.createdBy,
+            accessType: body.accessType,
+            creatorId: body.creatorId,
+        });
+        const newUser = yield user.save();
+        const allUsers = yield usersModel_1.Users.find();
+        res.status(201).json({ message: `${body.accessType} has been added`, user: newUser, users: allUsers });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.addUsers = addUsers;
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const allUsers = yield usersModel_1.Users.find();
+        res.status(200).json({ allUsers });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getUsers = getUsers;
+const updateUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const body = req.body;
+        const user = new usersModel_1.Users({
+            name: body.name,
+            email: body.email,
+            accessType: body.accessType,
+        });
+        yield usersModel_1.Users.updateOne({ id: body.id }, {
+            $set: { name: user.name, email: user.email, accessType: user.accessType },
+        });
+        const allUsers = yield usersModel_1.Users.find();
+        res.status(200).json({
+            message: "User info has been updated",
+            users: allUsers,
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.updateUsers = updateUsers;
+const deleteUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const body = req.body;
+        yield usersModel_1.Users.deleteOne({ id: body.id });
+        const allUsers = yield usersModel_1.Users.find();
+        res.status(200).json({
+            message: "User has been deleted",
+            users: allUsers,
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.deleteUsers = deleteUsers;
