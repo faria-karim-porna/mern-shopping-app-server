@@ -51,7 +51,7 @@ const updateItems = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             unitPrice: body.unitPrice,
         });
         yield itemsModel_1.Items.updateOne({ id: body.id }, {
-            $set: Object.assign({}, item),
+            $set: { name: item.name, quantity: item.quantity, unitPrice: item.unitPrice },
         });
         const allItems = yield itemsModel_1.Items.find();
         res.status(200).json({

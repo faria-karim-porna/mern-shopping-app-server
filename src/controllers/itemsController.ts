@@ -45,7 +45,7 @@ const updateItems = async (req: Request, res: Response): Promise<void> => {
     await Items.updateOne<IItems | null>(
       { id: body.id },
       {
-        $set: { ...item },
+        $set: { name: item.name, quantity: item.quantity, unitPrice: item.unitPrice },
       }
     );
     const allItems: IItems[] = await Items.find();
