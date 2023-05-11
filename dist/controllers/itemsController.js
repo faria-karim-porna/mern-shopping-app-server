@@ -67,7 +67,7 @@ exports.updateItems = updateItems;
 const deleteItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        yield itemsModel_1.Items.deleteOne(body.id);
+        yield itemsModel_1.Items.deleteOne({ id: body.id });
         const allItems = yield itemsModel_1.Items.find();
         res.status(200).json({
             message: "Item has been deleted",

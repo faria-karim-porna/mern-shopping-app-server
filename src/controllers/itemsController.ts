@@ -61,7 +61,7 @@ const updateItems = async (req: Request, res: Response): Promise<void> => {
 const deleteItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body;
-    await Items.deleteOne(body.id);
+    await Items.deleteOne({ id: body.id });
     const allItems: IItems[] = await Items.find();
     res.status(200).json({
       message: "Item has been deleted",
