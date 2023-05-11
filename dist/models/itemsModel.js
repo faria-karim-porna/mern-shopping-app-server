@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Item = void 0;
+exports.Items = void 0;
 const mongoose_1 = require("mongoose");
 const itemsSchema = new mongoose_1.Schema({
     // _id: { type: typeof ObjectId, required: true },
@@ -12,4 +12,4 @@ const itemsSchema = new mongoose_1.Schema({
     createdBy: { type: String, required: true },
     creatorId: { type: Number, required: true },
 });
-exports.Item = (0, mongoose_1.model)("Item", itemsSchema);
+exports.Items = (0, mongoose_1.model)("Items", itemsSchema);

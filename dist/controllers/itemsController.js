@@ -14,7 +14,7 @@ const itemsModel_1 = require("../models/itemsModel");
 const addItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        const item = new itemsModel_1.Item({
+        const item = new itemsModel_1.Items({
             id: body.id,
             name: body.name,
             quantity: body.quantity,
@@ -24,7 +24,7 @@ const addItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             creatorId: body.creatorId,
         });
         const newItem = yield item.save();
-        const allItems = yield itemsModel_1.Item.find();
+        const allItems = yield itemsModel_1.Items.find();
         res.status(201).json({ message: "Item has been added", item: newItem, items: allItems });
     }
     catch (error) {
@@ -34,7 +34,7 @@ const addItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.addItems = addItems;
 const getItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const allItems = yield itemsModel_1.Item.find();
+        const allItems = yield itemsModel_1.Items.find();
         res.status(200).json({ allItems });
     }
     catch (error) {
@@ -45,15 +45,15 @@ exports.getItems = getItems;
 const updateItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        const item = new itemsModel_1.Item({
+        const item = new itemsModel_1.Items({
             name: body.name,
             quantity: body.quantity,
             unitPrice: body.unitPrice,
         });
-        yield itemsModel_1.Item.updateOne({ id: body.id }, {
+        yield itemsModel_1.Items.updateOne({ id: body.id }, {
             $set: Object.assign({}, item),
         });
-        const allItems = yield itemsModel_1.Item.find();
+        const allItems = yield itemsModel_1.Items.find();
         res.status(200).json({
             message: "Item has been updated",
             items: allItems,
@@ -67,8 +67,8 @@ exports.updateItems = updateItems;
 const deleteItems = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        yield itemsModel_1.Item.deleteOne(body.id);
-        const allItems = yield itemsModel_1.Item.find();
+        yield itemsModel_1.Items.deleteOne(body.id);
+        const allItems = yield itemsModel_1.Items.find();
         res.status(200).json({
             message: "Item has been deleted",
             items: allItems,

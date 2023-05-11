@@ -1,12 +1,12 @@
 import { Response, Request } from "express";
 import { IItems } from "../types/itemsType";
-import { Item } from "../models/itemsModel";
+import { Items } from "../models/itemsModel";
 
 const addItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IItems, keyof IItems>;
 
-    const item: IItems = new Item({
+    const item: IItems = new Items({
       id: body.id,
       name: body.name,
       quantity: body.quantity,
@@ -17,7 +17,7 @@ const addItems = async (req: Request, res: Response): Promise<void> => {
     });
 
     const newItem: IItems = await item.save();
-    const allItems: IItems[] = await Item.find();
+    const allItems: IItems[] = await Items.find();
 
     res.status(201).json({ message: "Item has been added", item: newItem, items: allItems });
   } catch (error) {
@@ -27,7 +27,7 @@ const addItems = async (req: Request, res: Response): Promise<void> => {
 
 const getItems = async (req: Request, res: Response): Promise<void> => {
   try {
-    const allItems: IItems[] = await Item.find();
+    const allItems: IItems[] = await Items.find();
     res.status(200).json({ allItems });
   } catch (error) {
     throw error;
@@ -37,18 +37,18 @@ const getItems = async (req: Request, res: Response): Promise<void> => {
 const updateItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body;
-    const item: IItems = new Item({
+    const item: IItems = new Items({
       name: body.name,
       quantity: body.quantity,
       unitPrice: body.unitPrice,
     });
-    await Item.updateOne<IItems | null>(
+    await Items.updateOne<IItems | null>(
       { id: body.id },
       {
         $set: { ...item },
       }
     );
-    const allItems: IItems[] = await Item.find();
+    const allItems: IItems[] = await Items.find();
     res.status(200).json({
       message: "Item has been updated",
       items: allItems,
@@ -61,8 +61,8 @@ const updateItems = async (req: Request, res: Response): Promise<void> => {
 const deleteItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body;
-    await Item.deleteOne(body.id);
-    const allItems: IItems[] = await Item.find();
+    await Items.deleteOne(body.id);
+    const allItems: IItems[] = await Items.find();
     res.status(200).json({
       message: "Item has been deleted",
       items: allItems,

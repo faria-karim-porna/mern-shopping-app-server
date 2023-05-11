@@ -12,4 +12,4 @@ const itemsSchema: Schema = new Schema({
   creatorId: { type: Number, required: true },
 });
 
-export const Item = model<IItems>("Item", itemsSchema);
+export const Items = model<IItems>("Items", itemsSchema);
