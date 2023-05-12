@@ -4,6 +4,12 @@ import { Users } from "../models/usersModel";
 import bcrypt from "bcryptjs";
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
+// (find the user through email,
+//   if no email and password show error message,
+//   if email and wrong password show error,
+//   if has email and no password show create an account error,
+//   if has email and password then log in to the system)
 const createAccount = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IUsers, keyof IUsers>;
@@ -36,7 +42,7 @@ const createAccount = async (req: Request, res: Response): Promise<void> => {
       });
 
       await Users.updateOne<IUsers | null>(
-        { id: body.id },
+        { id: existingUser[0].id },
         {
           $set: { name: user.name, password: encryptedPassword },
         }
@@ -48,6 +54,37 @@ const createAccount = async (req: Request, res: Response): Promise<void> => {
       });
     } else {
       res.status(403).json({ status: "error", error: "Account already exists" });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const body = req.body as Pick<IUsers, keyof IUsers>;
+    const email = body.email;
+    const existingUser: IUsers[] = await Users.find({ email: email });
+    if (existingUser.length === 0) {
+      res.status(403).json({ status: "error", error: "Account does not exist" });
+    } else if (existingUser[0].email && !existingUser[0].password) {
+      res.status(403).json({ status: "error", error: "First set up your account" });
+    } else {
+      if (bcrypt.compareSync(body.password, existingUser[0].password)) {
+        const token = jwt.sign(
+          {
+            email: body.email,
+            passowrd: body.password,
+          },
+          JWT_SECRET
+        );
+        res.status(200).json({ status: "ok", data: token });
+      } else {
+        res.status(403).json({
+          status: "error",
+          error: "Invalid email/password",
+        });
+      }
     }
   } catch (error) {
     throw error;
@@ -125,4 +162,4 @@ const deleteUsers = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { createAccount, addUsers, getUsers, updateUsers, deleteUsers };
+export { createAccount, login, addUsers, getUsers, updateUsers, deleteUsers };

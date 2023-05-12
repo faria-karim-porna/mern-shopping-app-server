@@ -5,6 +5,7 @@ const usersController_1 = require("../controllers/usersController");
 const itemsController_1 = require("../controllers/itemsController");
 const router = (0, express_1.Router)();
 router.post("/api/createAccount", usersController_1.createAccount);
+router.post("/api/login", usersController_1.login);
 router.post("/api/addUsers", usersController_1.addUsers);
 router.get("/api/getUsers", usersController_1.getUsers);
 router.patch("/api/updateUsers", usersController_1.updateUsers);

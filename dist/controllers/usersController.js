@@ -12,10 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.createAccount = void 0;
+exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.login = exports.createAccount = void 0;
 const usersModel_1 = require("../models/usersModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt = require("jsonwebtoken");
+const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
+// (find the user through email,
+//   if no email and password show error message,
+//   if email and wrong password show error,
+//   if has email and no password show create an account error,
+//   if has email and password then log in to the system)
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
@@ -45,7 +51,7 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 name: body.name,
                 password: encryptedPassword,
             });
-            yield usersModel_1.Users.updateOne({ id: body.id }, {
+            yield usersModel_1.Users.updateOne({ id: existingUser[0].id }, {
                 $set: { name: user.name, password: encryptedPassword },
             });
             const allUsers = yield usersModel_1.Users.find();
@@ -63,6 +69,38 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createAccount = createAccount;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const body = req.body;
+        const email = body.email;
+        const existingUser = yield usersModel_1.Users.find({ email: email });
+        if (existingUser.length === 0) {
+            res.status(403).json({ status: "error", error: "Account does not exist" });
+        }
+        else if (existingUser[0].email && !existingUser[0].password) {
+            res.status(403).json({ status: "error", error: "First set up your account" });
+        }
+        else {
+            if (bcryptjs_1.default.compareSync(body.password, existingUser[0].password)) {
+                const token = jwt.sign({
+                    email: body.email,
+                    passowrd: body.password,
+                }, JWT_SECRET);
+                res.status(200).json({ status: "ok", data: token });
+            }
+            else {
+                res.status(403).json({
+                    status: "error",
+                    error: "Invalid email/password",
+                });
+            }
+        }
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.login = login;
 const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
