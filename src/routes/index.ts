@@ -1,12 +1,15 @@
 import { Router } from "express";
-import { addUsers, createAccount, deleteUsers, getUsers, login, updateUsers } from "../controllers/usersController";
+import { addUsers, deleteUsers, getUsers, updateUsers } from "../controllers/usersController";
 import { addItems, deleteItems, getItems, updateItems } from "../controllers/itemsController";
 import { authenticate } from "../middlewares/authenticateMiddleware";
+import { createAccount, login, logout, resetPassword } from "../controllers/authController";
 
 const router: Router = Router();
 
 router.post("/api/createAccount", createAccount);
 router.post("/api/login", login);
+router.post("/api/logout", logout);
+router.post("/api/resetPassword", resetPassword);
 
 router.post("/api/addUsers", authenticate, addUsers);
 router.get("/api/getUsers", authenticate, getUsers);
