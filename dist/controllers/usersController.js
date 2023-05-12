@@ -19,32 +19,44 @@ const jwt = require("jsonwebtoken");
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        const plainTextPassword = body.password;
-        const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
-        if (!body.name || typeof body.name !== "string") {
-            res.status(403).json({ status: "error", error: "Invalid username" });
+        const email = body.email;
+        const existingUser = yield usersModel_1.Users.find({ email: email });
+        if (existingUser.length === 0) {
+            const plainTextPassword = body.password;
+            const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
+            const user = new usersModel_1.Users({
+                id: body.id,
+                name: body.name,
+                email: body.email,
+                password: encryptedPassword,
+                createdAt: body.createdAt,
+                createdBy: body.name,
+                accessType: "User",
+                creatorId: body.id,
+            });
+            const newUser = yield user.save();
+            const allUsers = yield usersModel_1.Users.find();
+            res.status(201).json({ message: "User account has been created Successfully", user: newUser, Users: allUsers });
         }
-        if (!plainTextPassword || typeof plainTextPassword !== "string") {
-            res.status(403).json({ status: "error", error: "Invalid password" });
-        }
-        if (plainTextPassword.length < 5) {
-            res.status(403).json({
-                status: "error",
-                error: "Password too small. Should be atleast 6 characters",
+        else if (existingUser[0].email && !existingUser[0].password) {
+            const plainTextPassword = body.password;
+            const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
+            const user = new usersModel_1.Users({
+                name: body.name,
+                password: encryptedPassword,
+            });
+            yield usersModel_1.Users.updateOne({ id: body.id }, {
+                $set: { name: user.name, password: encryptedPassword },
+            });
+            const allUsers = yield usersModel_1.Users.find();
+            res.status(200).json({
+                message: `${existingUser[0].accessType} account has been created Successfully`,
+                users: allUsers,
             });
         }
-        const user = new usersModel_1.Users({
-            id: body.id,
-            name: body.name,
-            email: body.email,
-            password: encryptedPassword,
-            createdAt: body.createdAt,
-            createdBy: body.createdBy,
-            accessType: body.accessType,
-        });
-        const newUser = yield user.save();
-        const allUsers = yield usersModel_1.Users.find();
-        res.status(201).json({ message: "Account Created Successfully", user: newUser, Users: allUsers });
+        else {
+            res.status(403).json({ status: "error", error: "Account already exists" });
+        }
     }
     catch (error) {
         throw error;
