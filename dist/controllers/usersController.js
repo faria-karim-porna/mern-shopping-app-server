@@ -11,12 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = void 0;
 const usersModel_1 = require("../models/usersModel");
+const countersModel_1 = require("../models/countersModel");
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
+        const allCounter = yield countersModel_1.Counters.find();
+        const { userCount } = allCounter[0];
+        const id = (userCount !== null && userCount !== void 0 ? userCount : 0) + 1;
         const user = new usersModel_1.Users({
-            id: body.id,
+            id: id,
             name: "",
             email: body.email,
             password: "",

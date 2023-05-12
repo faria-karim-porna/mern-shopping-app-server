@@ -1,13 +1,17 @@
 import { Response, Request } from "express";
 import { IItems } from "../types/itemsType";
 import { Items } from "../models/itemsModel";
+import { ICounters } from "../types/countersType";
+import { Counters } from "../models/countersModel";
 
 const addItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IItems, keyof IItems>;
-
+    const allCounter: ICounters[] = await Counters.find();
+    const { itemCount } = allCounter[0];
+    const id = (itemCount ?? 0) + 1;
     const item: IItems = new Items({
-      id: body.id,
+      id: id,
       name: body.name,
       quantity: body.quantity,
       unitPrice: body.unitPrice,

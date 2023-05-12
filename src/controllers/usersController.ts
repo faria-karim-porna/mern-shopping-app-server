@@ -3,15 +3,19 @@ import { IUsers } from "../types/usersType";
 import { Users } from "../models/usersModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { ICounters } from "../types/countersType";
+import { Counters } from "../models/countersModel";
 
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 
 const addUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IUsers, keyof IUsers>;
-
+    const allCounter: ICounters[] = await Counters.find();
+    const { userCount } = allCounter[0];
+    const id = (userCount ?? 0) + 1;
     const user: IUsers = new Users({
-      id: body.id,
+      id: id,
       name: "",
       email: body.email,
       password: "",

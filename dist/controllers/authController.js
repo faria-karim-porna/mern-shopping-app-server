@@ -16,6 +16,7 @@ exports.logout = exports.resetPassword = exports.login = exports.createAccount =
 const usersModel_1 = require("../models/usersModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const countersModel_1 = require("../models/countersModel");
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -25,15 +26,18 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (existingUser.length === 0) {
             const plainTextPassword = body.password;
             const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
+            const allCounter = yield countersModel_1.Counters.find();
+            const { userCount } = allCounter[0];
+            const id = (userCount !== null && userCount !== void 0 ? userCount : 0) + 1;
             const user = new usersModel_1.Users({
-                id: body.id,
+                id: id,
                 name: body.name,
                 email: body.email,
                 password: encryptedPassword,
                 createdAt: body.createdAt,
                 createdBy: body.name,
                 accessType: "User",
-                creatorId: body.id,
+                creatorId: id,
             });
             const newUser = yield user.save();
             const allUsers = yield usersModel_1.Users.find();
