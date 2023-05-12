@@ -3,11 +3,7 @@ import { IUsers } from "../types/usersType";
 import { Users } from "../models/usersModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// (find the user through email,
-//   if old and new password matches show error message,
-//   if no email and password show error message,
-//   if has email and no password show create an account error,
-//   if has email and password then allow reset to the system)
+
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 
 const createAccount = async (req: Request, res: Response): Promise<void> => {
@@ -86,18 +82,6 @@ const login = async (req: Request, res: Response): Promise<void> => {
         });
       }
     }
-  } catch (error) {
-    throw error;
-  }
-};
-
-const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decode = jwt.verify(token, JWT_SECRET);
-
-    req.user = decode;
-    next();
   } catch (error) {
     throw error;
   }
@@ -212,4 +196,4 @@ const deleteUsers = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { createAccount, login, addUsers, getUsers, updateUsers, deleteUsers };
+export { createAccount, login, resetPassword, addUsers, getUsers, updateUsers, deleteUsers };

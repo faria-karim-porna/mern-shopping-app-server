@@ -12,15 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.login = exports.createAccount = void 0;
+exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.resetPassword = exports.login = exports.createAccount = void 0;
 const usersModel_1 = require("../models/usersModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// (find the user through email,
-//   if old and new password matches show error message,
-//   if no email and password show error message,
-//   if has email and no password show create an account error,
-//   if has email and password then allow reset to the system)
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -101,17 +96,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
-const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decode = jsonwebtoken_1.default.verify(token, JWT_SECRET);
-        req.user = decode;
-        next();
-    }
-    catch (error) {
-        throw error;
-    }
-});
 const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
@@ -149,6 +133,7 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         throw error;
     }
 });
+exports.resetPassword = resetPassword;
 const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
