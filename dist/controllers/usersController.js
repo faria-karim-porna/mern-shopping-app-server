@@ -15,13 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.login = exports.createAccount = void 0;
 const usersModel_1 = require("../models/usersModel");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jwt = require("jsonwebtoken");
-const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // (find the user through email,
+//   if old and new password matches show error message,
 //   if no email and password show error message,
-//   if email and wrong password show error,
 //   if has email and no password show create an account error,
-//   if has email and password then log in to the system)
+//   if has email and password then allow reset to the system)
+const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
@@ -82,7 +82,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         else {
             if (bcryptjs_1.default.compareSync(body.password, existingUser[0].password)) {
-                const token = jwt.sign({
+                const token = jsonwebtoken_1.default.sign({
                     email: body.email,
                     passowrd: body.password,
                 }, JWT_SECRET);
@@ -101,6 +101,54 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
+const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decode = jsonwebtoken_1.default.verify(token, JWT_SECRET);
+        req.user = decode;
+        next();
+    }
+    catch (error) {
+        throw error;
+    }
+});
+const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const body = req.body;
+        const email = body.email;
+        const existingUser = yield usersModel_1.Users.find({ email: email });
+        if (existingUser.length === 0) {
+            res.status(403).json({ status: "error", error: "Account does not exist" });
+        }
+        else if (existingUser[0].email && !existingUser[0].password) {
+            res.status(403).json({ status: "error", error: "First set up your account" });
+        }
+        else {
+            if (!bcryptjs_1.default.compareSync(body.password, existingUser[0].password)) {
+                const plainTextPassword = body.password;
+                const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
+                const user = new usersModel_1.Users({
+                    password: encryptedPassword,
+                });
+                yield usersModel_1.Users.updateOne({ id: existingUser[0].id }, {
+                    $set: { password: user.password },
+                });
+                res.status(200).json({
+                    message: "Password has been reset successfully",
+                });
+            }
+            else {
+                res.status(403).json({
+                    status: "error",
+                    error: "Old password can not be set as new password",
+                });
+            }
+        }
+    }
+    catch (error) {
+        throw error;
+    }
+});
 const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
