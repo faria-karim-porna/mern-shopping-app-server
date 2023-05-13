@@ -38,6 +38,8 @@ const addUsers = async (req: Request, res: Response): Promise<void> => {
     const allCounter: ICounters[] = await Counters.find();
     const { userCount } = allCounter[0];
     const id = (userCount ?? 0) + 1;
+    const _id = allCounter[0]._id;
+    const updateUserCount = await Counters.findByIdAndUpdate<ICounters | null>({ _id: _id }, { userCount: id });
     const user: IUsers = new Users({
       id: id,
       name: "",
