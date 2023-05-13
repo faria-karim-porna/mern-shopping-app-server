@@ -8,6 +8,30 @@ import { Counters } from "../models/countersModel";
 
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
 
+const addSuperAdmin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const plainTextPassword = "admin012!";
+    const encryptedPassword = bcrypt.hashSync(plainTextPassword, 10);
+    const user: IUsers = new Users({
+      id: 1,
+      name: "Super Admin",
+      email: "superAdmin@admin.com",
+      password: encryptedPassword,
+      createdAt: "5-13-2023 (10.00 AM)",
+      createdBy: "Super Admin",
+      accessType: "Super Admin",
+      creatorId: 1,
+    });
+
+    const newUser: IUsers = await user.save();
+    const allUsers: IUsers[] = await Users.find();
+
+    res.status(201).json({ message: "Super admin has been added", user: newUser, users: allUsers });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const addUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<IUsers, keyof IUsers>;
@@ -81,4 +105,4 @@ const deleteUsers = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { addUsers, getUsers, updateUsers, deleteUsers };
+export { addSuperAdmin, addUsers, getUsers, updateUsers, deleteUsers };

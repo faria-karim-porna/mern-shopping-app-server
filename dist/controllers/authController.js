@@ -29,6 +29,8 @@ const createAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             const allCounter = yield countersModel_1.Counters.find();
             const { userCount } = allCounter[0];
             const id = (userCount !== null && userCount !== void 0 ? userCount : 0) + 1;
+            const _id = allCounter[0]._id;
+            const updateUserCount = yield countersModel_1.Counters.findByIdAndUpdate({ _id: _id }, { userCount: id });
             const user = new usersModel_1.Users({
                 id: id,
                 name: body.name,

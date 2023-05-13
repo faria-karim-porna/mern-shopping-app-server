@@ -10,6 +10,7 @@ router.post("/api/createAccount", authController_1.createAccount);
 router.post("/api/login", authController_1.login);
 router.post("/api/logout", authController_1.logout);
 router.post("/api/resetPassword", authController_1.resetPassword);
+router.post("/api/addSuperAdmin", usersController_1.addSuperAdmin);
 router.post("/api/addUsers", authenticateMiddleware_1.authenticate, usersController_1.addUsers);
 router.get("/api/getUsers", authenticateMiddleware_1.authenticate, usersController_1.getUsers);
 router.patch("/api/updateUsers", authenticateMiddleware_1.authenticate, usersController_1.updateUsers);

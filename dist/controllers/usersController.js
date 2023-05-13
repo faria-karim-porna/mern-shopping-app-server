@@ -8,11 +8,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = void 0;
+exports.deleteUsers = exports.updateUsers = exports.getUsers = exports.addUsers = exports.addSuperAdmin = void 0;
 const usersModel_1 = require("../models/usersModel");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const countersModel_1 = require("../models/countersModel");
 const JWT_SECRET = "sdjkfh8923yhjdksbfma@#*(&@*!^#&@bhjb2qiuhesdbhjdsfg839ujkdhfjk";
+const addSuperAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const plainTextPassword = "admin012!";
+        const encryptedPassword = bcryptjs_1.default.hashSync(plainTextPassword, 10);
+        const user = new usersModel_1.Users({
+            id: 1,
+            name: "Super Admin",
+            email: "superAdmin@admin.com",
+            password: encryptedPassword,
+            createdAt: "5-13-2023 (10.00 AM)",
+            createdBy: "Super Admin",
+            accessType: "Super Admin",
+            creatorId: 1,
+        });
+        const newUser = yield user.save();
+        const allUsers = yield usersModel_1.Users.find();
+        res.status(201).json({ message: "Super admin has been added", user: newUser, users: allUsers });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.addSuperAdmin = addSuperAdmin;
 const addUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
