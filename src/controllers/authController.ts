@@ -82,7 +82,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
           },
           JWT_SECRET
         );
-        res.status(200).json({ status: "ok", data: token });
+        res.status(200).json({ status: "ok", token, user: existingUser[0] });
       } else {
         res.status(403).json({
           status: "error",
