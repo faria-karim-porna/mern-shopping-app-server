@@ -10,6 +10,8 @@ const addItems = async (req: Request, res: Response): Promise<void> => {
     const allCounter: ICounters[] = await Counters.find();
     const { itemCount } = allCounter[0];
     const id = (itemCount ?? 0) + 1;
+    const _id = allCounter[0]._id;
+    const updateItemCount = await Counters.findByIdAndUpdate<ICounters | null>({ _id: _id }, { itemCount: id });
     const item: IItems = new Items({
       id: id,
       name: body.name,
