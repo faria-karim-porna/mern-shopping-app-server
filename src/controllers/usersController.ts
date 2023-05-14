@@ -84,8 +84,10 @@ const updateUsers = async (req: Request, res: Response): Promise<void> => {
       }
     );
     const allUsers: IUsers[] = await Users.find();
+    const singleUser: IUsers[] = await Users.find({ id: body.id });
     res.status(200).json({
       message: "User info has been updated",
+      user: singleUser[0],
       users: allUsers,
     });
   } catch (error) {

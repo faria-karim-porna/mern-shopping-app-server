@@ -89,8 +89,10 @@ const updateUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             $set: { name: user.name, email: user.email, accessType: user.accessType },
         });
         const allUsers = yield usersModel_1.Users.find();
+        const singleUser = yield usersModel_1.Users.find({ id: body.id });
         res.status(200).json({
             message: "User info has been updated",
+            user: singleUser[0],
             users: allUsers,
         });
     }
